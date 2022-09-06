@@ -2,6 +2,7 @@ package com.example.file_upload_system.app.fileUpload.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,7 +17,7 @@ public class FileUploadController {
     @Value("${custom.genFileDirPath}")
     private String genFileDirPath;
 
-    @RequestMapping("")
+    @PostMapping("")
     @ResponseBody
     public String upload(@RequestParam("img1") MultipartFile img1, @RequestParam("img2") MultipartFile img2) {
         try {
