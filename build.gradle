@@ -44,7 +44,7 @@ dependencies {
     //querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
-
+    implementation 'org.apache.tika:tika-core:2.4.1'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0"
 
