@@ -5,6 +5,7 @@ import com.example.file_upload_system.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -14,8 +15,16 @@ import java.security.Principal;
 public class HomeController {
 
     private final MemberService memberService;
-    @RequestMapping("/")
-    public String main(Principal principal, Model model) {
+    @GetMapping("/")
+    public String showMain(Principal principal, Model model) {
+        Member loginedMember = null;
+        String loginedMemberProfileImgUrl = null;
+
+        return "home/main";
+    }
+
+    @GetMapping("/about")
+    public String showAbout(Principal principal, Model model) {
         Member loginedMember = null;
         String loginedMemberProfileImgUrl = null;
 
@@ -26,13 +35,10 @@ public class HomeController {
         if (loginedMember != null) {
             loginedMemberProfileImgUrl = loginedMember.getProfileImgUrl();
         }
+
         model.addAttribute("loginedMember", loginedMember);
         model.addAttribute("loginedMemberProfileImgUrl", loginedMemberProfileImgUrl);
-        return "home/main";
-    }
 
-    @RequestMapping("/test/upload")
-    public String upload() {
-        return "home/test/upload";
+        return "home/about";
     }
 }
