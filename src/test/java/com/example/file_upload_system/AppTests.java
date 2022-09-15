@@ -2,6 +2,7 @@ package com.example.file_upload_system;
 
 import com.example.file_upload_system.app.home.HomeController;
 import com.example.file_upload_system.app.member.controller.MemberController;
+import com.example.file_upload_system.app.member.entity.Member;
 import com.example.file_upload_system.app.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -106,12 +107,12 @@ public class AppTests {
     }
     @Test
     @DisplayName("회원가입")
-    @Rollback(value = false)
+
     void t5() throws Exception {
         String testUploadFileUrl = "https://picsum.photos/200/300";
         String originalFileName = "test.png";
 
-        // wget
+        // wget , 파일 다운로드 위해
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Resource> response = restTemplate.getForEntity(testUploadFileUrl, Resource.class);
         InputStream inputStream = response.getBody().getInputStream();
@@ -133,6 +134,18 @@ public class AppTests {
                                 .param("email", "user5@test.com")
                                 .characterEncoding("UTF-8"))
                 .andDo(print());
+
+        resultActions
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/member/profile"))
+                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().methodName("join"));
+
+        Member member = memberService.getMemberById(5L);
+
+        assertThat(member).isNotNull();
+
+        memberService.removeProfileImg(member);
 
         // 5번회원이 생성되어야 함, 테스트
         // 여기 마저 구현
