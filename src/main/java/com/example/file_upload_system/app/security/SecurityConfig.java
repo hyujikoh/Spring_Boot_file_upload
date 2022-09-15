@@ -1,4 +1,4 @@
-package com.example.file_upload_system.app.base;
+package com.example.file_upload_system.app.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

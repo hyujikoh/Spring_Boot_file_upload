@@ -16,13 +16,13 @@ public class HomeController {
 
     private final MemberService memberService;
     @GetMapping("/")
-    public String showMain(Principal principal, Model model) {
+    public String showMain() {
 
         return "home/main";
     }
 
     @GetMapping("/about")
-    public String showAbout(Principal principal, Model model) {
+    public String showAbout() {
         return "home/about";
     }
 }
