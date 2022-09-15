@@ -16,6 +16,8 @@ public class SecurityConfig {
         http.
                 csrf().disable()
         .authorizeRequests().antMatchers("/**").permitAll()
+                .and().formLogin().loginPage("/member/login")//get
+                .loginProcessingUrl("/member/login");//post
                 ;
         return http.build();
     }
