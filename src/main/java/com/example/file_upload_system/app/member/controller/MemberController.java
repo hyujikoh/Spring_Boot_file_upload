@@ -64,4 +64,9 @@ public class MemberController {
 
         return "member/profile";
     }
+
+    @GetMapping("/login")
+    public String showLogin() {
+        return "member/login";
+    }
 }
