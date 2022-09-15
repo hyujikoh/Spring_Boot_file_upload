@@ -13,14 +13,28 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.
-                csrf().disable()
-        .authorizeRequests().antMatchers("/**").permitAll()
-                .and().formLogin().loginPage("/member/login")//get
-                .loginProcessingUrl("/member/login");//post
-                ;
+        http
+                .csrf(
+                csrf -> csrf.disable()
+        )
+                .authorizeRequests(
+                        authorizeRequests -> authorizeRequests
+                                .antMatchers("/**")
+                                .permitAll()
+                )
+                .formLogin(
+                        formLogin -> formLogin
+                                .loginPage("/member/login") // GET
+                                .loginProcessingUrl("/member/login") // POST
+                );
+//                csrf().disable() 기존에 사용하던 방식
+//                .authorizeRequests().antMatchers("/**").permitAll()
+//                .and().formLogin().loginPage("/member/login")//get
+//                .loginProcessingUrl("/member/login");//post
+        ;
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
