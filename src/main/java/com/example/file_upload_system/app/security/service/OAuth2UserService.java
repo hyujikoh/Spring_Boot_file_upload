@@ -1,16 +1,44 @@
 package com.example.file_upload_system.app.security.service;
 
+import com.example.file_upload_system.app.member.entity.Member;
+import com.example.file_upload_system.app.member.exception.MemberNotFoundException;
+import com.example.file_upload_system.app.member.repository.MemberRepository;
+import com.example.file_upload_system.app.member.service.MemberService;
+import com.example.file_upload_system.app.security.dto.MemberContext;
+import com.example.file_upload_system.app.security.exception.OAuthTypeMatchNotFoundException;
+import com.example.file_upload_system.app.util.Util;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OAuth2UserService extends DefaultOAuth2UserService {
+    @Value("${custom.genFileDirPath}")
+    private String genFileDirPath;
 
- /*
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MemberService memberService;
+
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -30,6 +58,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     Map attributesProperties = (Map) attributes.get("properties");
                     Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
                     String nickname = (String) attributesProperties.get("nickname");
+                    attributesProperties.get("profile_image");
+
                     String email = "%s@kakao.com".formatted(oauthId);
                     String username = "KAKAO_%s".formatted(oauthId);
                     if ((boolean) attributesKakaoAcount.get("has_email")) {
@@ -38,25 +68,27 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     member = Member.builder()
                             .email(email)
                             .username(username)
-                            .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                            .password("")
+
                             .build();
                     memberRepository.save(member);
+                    memberService.setProfileImgByUrl(member, (String)attributesProperties.get("profile_image"));
                 }
             }
         } else {
             member = memberRepository.findByUsername("%s_%s".formatted(oauthType, oauthId))
                     .orElseThrow(MemberNotFoundException::new);
         }
-        Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("member"));
         return new MemberContext(member, authorities, attributes, userNameAttributeName);
     }
-    */
 
-    /*
+
+
     private boolean isNew(String oAuthType, String oAuthId) {
         return memberRepository.findByUsername("%s_%s".formatted(oAuthType, oAuthId)).isEmpty();
     }
-    */
+
 
 }
