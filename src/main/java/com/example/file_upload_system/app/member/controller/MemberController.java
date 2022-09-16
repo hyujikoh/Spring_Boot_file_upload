@@ -80,12 +80,38 @@ public class MemberController {
         return "member/login";
     }
 
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify")
+    public String showModify() {
+        return "member/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify")
+    public String modify(@AuthenticationPrincipal MemberContext context, String email, MultipartFile profileImg, String profileImg__delete) {
+        Member member = memberService.getMemberById(context.getId());
+
+        if ( profileImg__delete != null && profileImg__delete.equals("Y") ) {
+            memberService.removeProfileImg(member);
+        }
+
+        memberService.modify(member, email, profileImg);
+
+
+
+        return "redirect:/member/profile";
+    }
     // 캐시 사용해서 이미지 저장
     @GetMapping("/profile/img/{id}")
     public ResponseEntity<Object> showProfileImg(@PathVariable Long id) throws URISyntaxException {
-        URI redirectUri = new URI(memberService.getMemberById(id).getProfileImgUrl());
-        System.out.println(redirectUri);
-        HttpHeaders httpHeaders = new HttpHeaders();
+        String profileImgUrl = memberService.getMemberById(id).getProfileImgUrl();
+
+        if ( profileImgUrl == null ) {
+            profileImgUrl = "https://via.placeholder.com/100x100.png?text=U_U";
+        }
+
+        URI redirectUri = new URI(profileImgUrl); HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(redirectUri);
         httpHeaders.setCacheControl(CacheControl.maxAge(60 * 60 * 1, TimeUnit.SECONDS));
         return new ResponseEntity<>(httpHeaders, HttpStatus.FOUND);

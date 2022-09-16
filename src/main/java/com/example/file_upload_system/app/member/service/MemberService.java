@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService  {
+public class MemberService {
     @Value("${custom.genFileDirPath}")
     private String genFileDirPath;
 
@@ -27,23 +27,9 @@ public class MemberService  {
     }
 
     public Member join(String username, String password, String email, MultipartFile profileImg) {
-        String profileImgDirName = getCurrentProfileImgDirName();
 
-        String ext = Util.file.getExt(profileImg.getOriginalFilename()); // 파일 확장자 꺼내기
+        String profileImgRelPath = saveProfileImg(profileImg);
 
-        String fileName = UUID.randomUUID() + "." + ext;
-        String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
-        String profileImgFilePath = profileImgDirPath + "/" + fileName;
-
-        new File(profileImgDirPath).mkdirs(); // 폴더가 혹시나 없다면 만들어준다.
-
-        try {
-            profileImg.transferTo(new File(profileImgFilePath));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        String profileImgRelPath = profileImgDirName + "/" + fileName;
         Member member = Member.builder()
                 .username(username)
                 .password(password)
@@ -54,12 +40,62 @@ public class MemberService  {
         memberRepository.save(member);
 
         return member;
+
+
+        //        String profileImgDirName = getCurrentProfileImgDirName();
+//
+//        String ext = Util.file.getExt(profileImg.getOriginalFilename()); // 파일 확장자 꺼내기
+//
+//        String fileName = UUID.randomUUID() + "." + ext;
+//        String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
+//        String profileImgFilePath = profileImgDirPath + "/" + fileName;
+//
+//        new File(profileImgDirPath).mkdirs(); // 폴더가 혹시나 없다면 만들어준다.
+//
+//        try {
+//            profileImg.transferTo(new File(profileImgFilePath));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        String profileImgRelPath = profileImgDirName + "/" + fileName;
+//        Member member = Member.builder()
+//                .username(username)
+//                .password(password)
+//                .email(email)
+//                .profileImg(profileImgRelPath)
+//                .build();
+//
+//        memberRepository.save(member);
+//
+//        return member;
     }
+
+    private String saveProfileImg(MultipartFile profileImg) {
+
+        if ( profileImg == null || profileImg.isEmpty() ) {
+            return null;
+        }
+        String profileImgDirName = getCurrentProfileImgDirName();
+
+        String ext = Util.file.getExt(profileImg.getOriginalFilename());
+        String fileName = UUID.randomUUID() + "." + ext;
+        String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
+        String profileImgFilePath = profileImgDirPath + "/" + fileName;
+        new File(profileImgDirPath).mkdirs(); // 폴더가 혹시나 없다면 만들어준다.
+        try {
+            profileImg.transferTo(new File(profileImgFilePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return profileImgDirName + "/" + fileName;
+    }
+
 
     public Member getMemberById(Long id) {
         return memberRepository.findById(id).orElse(null);
     }
-
 
 
     // 프로필 이미지가 없는 회원
@@ -95,5 +131,14 @@ public class MemberService  {
 
     private String getCurrentProfileImgDirName() {
         return "member/" + Util.date.getCurrentDateFormatted("yyyy_MM_dd");
+    }
+
+    public void modify(Member member, String email, MultipartFile profileImg) {
+        removeProfileImg(member);
+        String profileImgRelPath = saveProfileImg(profileImg);
+
+        member.setEmail(email);
+        member.setProfileImg(profileImgRelPath);
+        memberRepository.save(member);
     }
 }
