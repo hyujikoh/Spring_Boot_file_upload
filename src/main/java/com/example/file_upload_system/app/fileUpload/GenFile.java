@@ -14,8 +14,9 @@ import javax.persistence.Entity;
 @SuperBuilder
 @ToString(callSuper = true)
 public class GenFile extends BaseEntity {
+    private long relId;
     private String relTypeCode;
-    private int relId;
+
     private String typeCode;
     private String type2Code;
     private String fileExtTypeCode;

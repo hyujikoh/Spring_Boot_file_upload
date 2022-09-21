@@ -3,6 +3,7 @@ package com.example.file_upload_system.app.article.controller;
 import com.example.file_upload_system.app.article.entity.Article;
 import com.example.file_upload_system.app.article.input.ArticleForm;
 import com.example.file_upload_system.app.article.service.ArticleService;
+import com.example.file_upload_system.app.fileUpload.service.GenFileService;
 import com.example.file_upload_system.app.security.dto.MemberContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ import java.util.Map;
 public class ArticleController {
 
     private final ArticleService articleService;
-
+    private final GenFileService genFileService;
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
     public String showWrite() {
@@ -44,8 +45,8 @@ public class ArticleController {
 
         Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 
-        log.debug("fileMap : " + fileMap);
         Article article = articleService.write(memberContext.getId(), articleForm.getSubject(), articleForm.getContent());
+        genFileService.saveFiles(article, fileMap);
         return "작업중";
     }
 }
