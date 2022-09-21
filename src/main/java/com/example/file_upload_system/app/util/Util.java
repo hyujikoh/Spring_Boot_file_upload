@@ -16,15 +16,6 @@ import java.util.Date;
 import java.util.Optional;
 
 public class Util {
-    public static class date {
-
-        public static String getCurrentDateFormatted(String pattern) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            return simpleDateFormat.format(new Date());
-        }
-    }
-
-
     public static class url {
         public static String encode(String str) {
             try {
@@ -34,6 +25,14 @@ public class Util {
             }
         }
 
+    }
+
+    public static class date {
+
+        public static String getCurrentDateFormatted(String pattern) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            return simpleDateFormat.format(new Date());
+        }
     }
 
     public static class file {
@@ -111,7 +110,5 @@ public class Util {
 
             return "etc";
         }
-
-
     }
 }

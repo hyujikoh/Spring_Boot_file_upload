@@ -46,9 +46,6 @@ public class ArticleController {
         Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 
         Article article = articleService.write(memberContext.getId(), articleForm.getSubject(), articleForm.getContent());
-        genFileService.saveFiles(article, fileMap);
-
-
         RsData<Map<String, GenFile>> saveFilesRsData = genFileService.saveFiles(article, fileMap);
 
 

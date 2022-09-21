@@ -23,13 +23,16 @@ public class GenFileService {
     public RsData<Map<String, GenFile>> saveFiles(Article article, Map<String, MultipartFile> fileMap) {
         String relTypeCode = "article";
         long relId = article.getId();
+
         Map<String, GenFile> genFileIds = new HashMap<>();
+
         for (String inputName : fileMap.keySet()) {
             MultipartFile multipartFile = fileMap.get(inputName);
 
             if (multipartFile.isEmpty()) {
                 continue;
             }
+
             String[] inputNameBits = inputName.split("__");
 
             String typeCode = inputNameBits[0];
@@ -41,9 +44,6 @@ public class GenFileService {
             int fileNo = Integer.parseInt(inputNameBits[2]);
             int fileSize = (int) multipartFile.getSize();
             String fileDir = relTypeCode + "/" + Util.date.getCurrentDateFormatted("yyyy_MM_dd");
-
-
-
             GenFile genFile = GenFile
                     .builder()
                     .relTypeCode(relTypeCode)
@@ -60,7 +60,6 @@ public class GenFileService {
                     .build();
 
             genFileRepository.save(genFile);
-
 
             String filePath = AppConfig.GET_FILE_DIR_PATH + "/" + fileDir + "/" + genFile.getFileName();
 
