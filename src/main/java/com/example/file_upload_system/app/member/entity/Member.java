@@ -39,4 +39,8 @@ public class Member extends BaseEntity {
 
         return "/gen-file/" + profileImg;
     }
+
+    public Member(long id) {
+        super(id);
+    }
 }
