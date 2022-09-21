@@ -3,6 +3,8 @@ package com.example.file_upload_system.app.article.controller;
 import com.example.file_upload_system.app.article.entity.Article;
 import com.example.file_upload_system.app.article.input.ArticleForm;
 import com.example.file_upload_system.app.article.service.ArticleService;
+import com.example.file_upload_system.app.base.dto.RsData;
+import com.example.file_upload_system.app.fileUpload.GenFile;
 import com.example.file_upload_system.app.fileUpload.service.GenFileService;
 import com.example.file_upload_system.app.security.dto.MemberContext;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +49,9 @@ public class ArticleController {
 
         Article article = articleService.write(memberContext.getId(), articleForm.getSubject(), articleForm.getContent());
         genFileService.saveFiles(article, fileMap);
+
+
+        RsData<Map<String, GenFile>> saveFilesRsData = genFileService.saveFiles(article, fileMap);
         return "작업중";
     }
 }
