@@ -3,6 +3,7 @@ package com.example.file_upload_system.app.fileUpload.service;
 import com.example.file_upload_system.app.article.entity.Article;
 import com.example.file_upload_system.app.fileUpload.GenFile;
 import com.example.file_upload_system.app.fileUpload.repository.GenFileRepository;
+import com.example.file_upload_system.app.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,15 +22,19 @@ public class GenFileService {
         for (String inputName : fileMap.keySet()) {
             MultipartFile multipartFile = fileMap.get(inputName);
 
-            String typeCode = "common";
-            String type2Code = "inBody";
-            String fileExt = "jpg";
-            String fileExtTypeCode = "img";
-            String fileExtType2Code = "jpg";
-            int fileNo = 1;
-            int fileSize = 1000;
-            String fileDir = "article/2022_09_19";
-            String originFileName = "??";
+            String[] inputNameBits = inputName.split("__");
+
+            String typeCode = inputNameBits[0];
+            String type2Code = inputNameBits[1];
+            String originFileName = multipartFile.getOriginalFilename();
+            String fileExt = Util.file.getExt(originFileName);
+            String fileExtTypeCode = Util.file.getFileExtTypeCodeFromFileExt(fileExt);
+            String fileExtType2Code = Util.file.getFileExtType2CodeFromFileExt(fileExt);
+            int fileNo = Integer.parseInt(inputNameBits[2]);
+            int fileSize = (int) multipartFile.getSize();
+            String fileDir = relTypeCode + "/" + Util.date.getCurrentDateFormatted("yyyy_MM_dd");
+
+
 
             GenFile genFile = GenFile
                     .builder()
