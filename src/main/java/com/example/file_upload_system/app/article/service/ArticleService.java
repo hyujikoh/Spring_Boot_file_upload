@@ -26,4 +26,8 @@ public class ArticleService {
 
         return article;
     }
+
+    public Article getArticleById(Long id) {
+        return articleRepository.findById(id).orElse(null); // 없을경우 null 값
+    }
 }

@@ -6,6 +6,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -20,6 +22,18 @@ public class Util {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             return simpleDateFormat.format(new Date());
         }
+    }
+
+
+    public static class url {
+        public static String encode(String str) {
+            try {
+                return URLEncoder.encode(str, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                return str;
+            }
+        }
+
     }
 
     public static class file {
@@ -97,5 +111,7 @@ public class Util {
 
             return "etc";
         }
+
+
     }
 }
