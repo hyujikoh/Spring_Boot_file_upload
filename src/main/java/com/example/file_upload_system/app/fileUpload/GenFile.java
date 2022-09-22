@@ -31,6 +31,6 @@ public class GenFile extends BaseEntity {
     }
 
     public String getUrl() {
-        return "/gen/" + getFileDir() + "/" + getFileName();
+        return "/gen-file/" + getFileDir() + "/" + getFileName();
     }
 }
