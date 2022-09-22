@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface GenFileRepository extends JpaRepository<GenFile, Long> {
     List<GenFile> findByRelTypeCodeAndRelId(String article, Long id);
+
+    List<GenFile> findByRelTypeCodeAndRelIdOrderByTypeCodeAscType2CodeAscFileNoAsc(String relTypeCode, Long relId);
 }
