@@ -31,8 +31,9 @@
         </div>
 
         <div th:each="entry : ${article.extra.genFileMap}">
+            <hr />
             <img th:src="@{${entry.value.url}}" alt="">
-            <script>console.log([[${entry.value.fileName}]])</script>
+
         </div>
 
     </div>
