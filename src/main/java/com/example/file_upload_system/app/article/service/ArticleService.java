@@ -39,4 +39,13 @@ public class ArticleService {
     public Article getArticleById(Long id) {
         return articleRepository.findById(id).orElse(null); // 없을경우 null 값
     }
+
+    public Article getForPrintArticleById(Long id) {
+
+        Article article = getArticleById(id);
+
+        article.getExtra().put("age", 22);
+
+        return article;
+    }
 }
