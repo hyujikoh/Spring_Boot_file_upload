@@ -1,22 +1,13 @@
 spring:
   profiles:
-    active: dev, base-addi
-  thymeleaf:
-    cache: false
-    prefix: file:src/main/resources/templates/
-  devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: true
+    active: dev
+    include:
+      - base-addi
+
   datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/zero?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: root
-    password:
-    driver-class-name: org.mariadb.jdbc.Driver
+
   jpa:
-    hibernate:
-      ddl-auto: create
+
   security:
     oauth2:
       client:
