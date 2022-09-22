@@ -2,6 +2,7 @@ package com.example.file_upload_system.app.member.entity;
 
 import com.example.file_upload_system.app.base.AppConfig;
 import com.example.file_upload_system.app.base.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -19,6 +20,7 @@ import java.util.Objects;
 public class Member extends BaseEntity {
     @Column(unique = true)
     private String username;
+    @JsonIgnore // json 형식 출력값 나오면 안되는 구문이기 때문에 처리
     private String password;
     private String email;
     private String profileImg;

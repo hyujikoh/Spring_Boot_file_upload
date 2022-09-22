@@ -62,4 +62,11 @@ public class ArticleController {
 
         return "article/detail";
     }
+
+
+    @GetMapping("/{id}/json/forDebug")
+    @ResponseBody
+    public Article showDetailJson(Model model, @PathVariable Long id) {
+        return articleService.getForPrintArticleById(id);
+    }
 }
