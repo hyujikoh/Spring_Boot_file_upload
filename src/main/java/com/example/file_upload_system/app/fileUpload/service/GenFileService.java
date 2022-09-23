@@ -8,6 +8,7 @@ import com.example.file_upload_system.app.fileUpload.repository.GenFileRepositor
 import com.example.file_upload_system.app.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -66,7 +67,7 @@ public class GenFileService {
                     .originFileName(originFileName)
                     .build();
 
-            genFileRepository.save(genFile);
+            genFile = save(genFile);
 
             String filePath = AppConfig.GET_FILE_DIR_PATH + "/" + fileDir + "/" + genFile.getFileName();
 
@@ -85,6 +86,31 @@ public class GenFileService {
 
         return new RsData("S-1", "파일을 업로드했습니다.", genFileIds);
     }
+
+    @Transactional
+    public GenFile save(GenFile genFile) {
+        Optional<GenFile> opOldGenFile = genFileRepository.findByRelTypeCodeAndRelIdAndTypeCodeAndType2CodeAndFileNo(genFile.getRelTypeCode(), genFile.getRelId(), genFile.getTypeCode(), genFile.getType2Code(), genFile.getFileNo());
+
+        if (opOldGenFile.isPresent()) {
+            GenFile oldGenFile = opOldGenFile.get();
+            deleteFileFromStorage(oldGenFile);
+
+            oldGenFile.merge(genFile);
+
+            genFileRepository.save(oldGenFile);
+
+            return oldGenFile;
+        }
+
+        genFileRepository.save(genFile);
+
+        return genFile;
+    }
+
+    private void deleteFileFromStorage(GenFile genFile) {
+        new File(genFile.getFilePath()).delete();
+    }
+
     public void addGenFileByUrl(String relTypeCode, Long relId, String typeCode, String type2Code, int fileNo, String url) {
         String fileDir = getCurrentDirName(relTypeCode);
 
