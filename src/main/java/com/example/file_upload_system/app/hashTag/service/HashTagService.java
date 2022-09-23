@@ -8,6 +8,7 @@ import com.example.file_upload_system.app.hashTag.repository.HashTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +20,26 @@ public class HashTagService {
     private final HashTagRepository hashTagRepository;
 
     public void applyHashTags(Article article, String keywordContentsStr) {
+        List<HashTag> oldHashTags = getHashTags(article);
         List<String> keywordContents = Arrays.stream(keywordContentsStr.split("#"))
                 .map(String::trim)
                 .filter(s -> s.length() > 0)
                 .collect(Collectors.toList());
+
+
+        List<HashTag> needToDelete = new ArrayList<>();
+
+        for (HashTag oldHashTag : oldHashTags) {
+            boolean contains = keywordContents.stream().anyMatch(s -> s.equals(oldHashTag.getKeyword().getContent()));
+
+            if (contains == false) {
+                needToDelete.add(oldHashTag);
+            }
+        }
+
+        needToDelete.forEach(hashTag -> {
+            hashTagRepository.delete(hashTag);
+        });
 
         keywordContents.forEach(keywordContent -> {
             saveHashTag(article, keywordContent);
