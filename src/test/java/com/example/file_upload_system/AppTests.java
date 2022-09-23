@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @Transactional // 테스트 환경에서 해당 어노테이션을 수행하면 수행된건 실제 디비에 반영 안되게 할것이다
 
-@ActiveProfiles({"base-addi", "test"})
+@ActiveProfiles("test")
 public class AppTests {
 
     @Autowired
