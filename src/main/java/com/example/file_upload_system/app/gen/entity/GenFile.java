@@ -1,4 +1,4 @@
-package com.example.file_upload_system.app.fileUpload;
+package com.example.file_upload_system.app.gen.entity;
 
 import com.example.file_upload_system.app.base.AppConfig;
 import com.example.file_upload_system.app.base.entity.BaseEntity;
@@ -51,5 +51,9 @@ public class GenFile extends BaseEntity {
 
     public String getFilePath() {
         return AppConfig.GET_FILE_DIR_PATH + "/" + getFileDir() + "/" + getFileName();
+    }
+
+    public String getDownloadUrl() {
+        return "/download/gen/" + getId();
     }
 }
